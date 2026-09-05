@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sổ Chủ Nhiệm Điện Tử - Lớp 10A4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ============================================================ -->
+    <!-- BẢN QUYỀN THUỘC SỞ HỮU CHÍNH CHỦ: CÔ TRỊNH NGỌC ÁNH (BẮC NINH) -->
+    <!-- ============================================================ -->
+    <script> const MA_DU_LIEU = "11A5"; </script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+    @media (max-width: 600px) {
+        body { font-size: 14px !important; }
+        table, th, td { font-size: 13px !important; }
+        button, select, input { font-size: 14px !important; }
+        .auth-card, #detailModal .auth-card { width: 95% !important; max-width: 400px !important; padding: 14px !important; }
+    }
+        :root { --primary: #1e40af; --bg: #f1f5f9; --text-main: #0f172a; --border: #cbd5e1; --font-main: 'Be Vietnam Pro', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.4; padding: 6px; font-size: 13.5px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .modern-banner-wrapper { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%); border-radius: 12px; padding: 16px 10px; margin-bottom: 10px; color: #ffffff; text-align: center; box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15); }
+        .banner-line-1 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;}
+        .banner-line-2 { font-size: 0.85rem; font-weight: 700; color: #93c5fd; margin-bottom: 2px; }
+        .banner-line-3 { font-size: 0.75rem; color: #fde047; font-weight: 600; }
+
+        .nav-bar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px; }
+        @media (min-width: 600px) { .nav-bar-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 900px) { .nav-bar-grid { grid-template-columns: repeat(5, 1fr); } }
+        .btn-nav-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 8px; cursor: pointer; background: #ffffff; display: flex; align-items: center; gap: 6px; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+        .btn-nav-card.active { border-color: var(--primary); background: #eff6ff; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);}
+        .nav-card-num { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0; }
+        .nav-num-1 { background: linear-gradient(135deg, #d97706, #b45309); } 
+        .nav-num-2 { background: linear-gradient(135deg, #16a34a, #15803d); } 
+        .nav-num-3 { background: linear-gradient(135deg, #dc2626, #991b1b); } 
+        .nav-num-4 { background: linear-gradient(135deg, #0d9488, #0f766e); } 
+        .nav-num-5 { background: linear-gradient(135deg, #2563eb, #1d4ed8); } 
+        .nav-card-text { text-align: left; }
+        .nav-card-text strong { display: block; font-size: 0.72rem; color: #1e293b; font-weight: 800; }
+        .nav-card-text small { font-size: 0.6rem; color: #64748b; white-space: nowrap;}
+
+        .view-panel { display: none; animation: fadeIn 0.2s; } .view-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .table-responsive { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: #fff; min-width: 600px;}
+        th, td { padding: 9px 8px; border-bottom: 1px solid var(--border); border-right: 1px solid #f1f5f9; text-align: center; }
+        th { background: #f8fafc; color: #1e3a8a; font-weight: 800; }
+        td:nth-child(2) { text-align: left; font-weight: 700; color: #0f172a; min-width: 140px; }
+
+        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: inline-flex; justify-content: center; align-items: center; gap: 6px; transition: background 0.2s; text-decoration: none;}
+        .btn-action:hover { filter: brightness(1.1); }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:4px; text-transform:uppercase;}
+        .form-group input, .form-group textarea, select { width: 100%; padding: 8px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.85rem; outline: none; background: #fff;}
+        .input-control-bar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; background: #fff1f2; padding: 10px; border-radius: 8px; align-items: center; border: 1.5px solid #fecdd3; }
+        
+        .student-entry-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .student-entry-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; }
+        
+        .error-grid-options { display: grid; grid-template-columns: repeat(1, 1fr); gap: 6px; }
+        @media (min-width: 500px) { .error-grid-options { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 850px) { .error-grid-options { grid-template-columns: repeat(3, 1fr); } }
+        
+        .error-counter-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center; }
+        .error-label { font-size: 0.78rem; font-weight: 700; color: #334155; }
+        .counter-controls { display: flex; align-items: center; gap: 4px; }
+        .btn-count { width: 28px; height: 28px; border-radius: 6px; border: none; background: #e2e8f0; font-weight: 900; font-size: 1rem; cursor: pointer; }
+        .btn-count:disabled { opacity: 0.4; cursor: not-allowed; }
+        
+        .count-val { width: 44px; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; font-weight: 800; outline: none; padding: 4px 2px; background: #fff;}
+        .count-val:disabled { background: #f1f5f9; color: #94a3b8; }
+
+        .seating-map-container { background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .seating-scroll-area { width: max-content; min-width: 100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 5px; }
+        .seating-grid-wrapper { display: flex; justify-content: center; gap: 16px; margin-bottom: 12px; width: max-content; }
+        .col-group { display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 8px; width: 200px; }
+        
+        .group-tto-1 { border: 2.5px solid #ca8a04 !important; background-color: #fef08a !important; } 
+        .group-tto-2 { border: 2.5px solid #d97706 !important; background-color: #fed7aa !important; } 
+        .group-tto-3 { border: 2.5px solid #475569 !important; background-color: #cbd5e1 !important; } 
+        .group-tto-4 { border: 2.5px solid #16a34a !important; background-color: #bbf7d0 !important; } 
+
+        .seat-row { display: flex; gap: 4px; padding: 5px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.15); justify-content: center; margin-bottom: 4px; }
+        .seat-box { width: 85px; height: 55px; border: 1px solid #64748b; background: #ffffff; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2px; position: relative; transition: 0.2s; cursor: pointer; }
+        .seat-box:hover { border-color: #ea580c; background: #fff7ed;}
+        .seat-box.selected-seat { border: 2px solid #ea580c; background: #fff7ed; transform: scale(1.05); z-index: 10;}
+        .seat-name { font-size: 0.6rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-height: 1.2; margin-top: 2px; color: #0f172a; }
+        .seat-box.empty-seat { background: #f8fafc; border: 1px dashed #94a3b8; opacity: 0.6; }
+        .seat-box.empty-seat .seat-name { font-size: 0.55rem; color: #64748b; font-weight: 500; font-style: italic; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 2000; justify-content: center; align-items: center; padding: 10px; }
+        .modal-overlay.open { display: flex; }
+        .auth-card { background: #ffffff; width: 95%; max-width: 600px; border-radius: 12px; padding: 16px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2);}
+        
+        .modern-announcement { background: linear-gradient(to right, #ffffff, #f8fafc); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 10px; }
+        .modern-announcement-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap:wrap; gap:6px;}
+        .modern-announcement-title { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 800; color: #0f172a; }
+        .modern-announcement-icon { background: #e0f2fe; color: #0284c7; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
+        .modern-announcement-date { font-size: 0.7rem; color: #64748b; background: #f1f5f9; padding: 3px 8px; border-radius: 12px; font-weight: 600; }
+        .modern-announcement-content { font-size: 0.85rem; color: #475569; padding-left: 36px; white-space: pre-wrap; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- BANNER -->
+        <div class="modern-banner-wrapper">
+            <div class="banner-line-1" id="banner-class-name">SỔ CHỦ NHIỆM ĐIỆN TỬ</div>
+            <div class="banner-line-2"><span id="banner-class">Lớp 10A4</span> — Năm học <span id="banner-year">2026 - 2027</span></div>
+            <div class="banner-line-3">GVCN: <span id="banner-teacher">Trịnh Ngọc Ánh</span> — <span id="banner-school">Trường THPT Tân Yên số 2</span></div>
+            <div id="live-realtime-week-badge" style="margin-top:8px; display:inline-block; background:rgba(255,255,255,0.25); padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-clock mr-1"></i> Đang tải dữ liệu...</div>
+        </div>
+
+        <!-- 5 TABS ĐIỀU HƯỚNG -->
+        <div class="nav-bar-grid">
+            <button class="btn-nav-card active" id="nav-btn-tab1" onclick="switchMainTab('tab1')">
+                <div class="nav-card-num nav-num-1">1</div>
+                <div class="nav-card-text"><strong>TRANG CHỦ</strong><small>Tin tức & Sơ đồ</small></div>
+            </button>
+            <button class="btn-nav-card" id="nav-btn-tab2" onclick="switchMainTab('tab2')">
+                <div class="nav-card-num nav-num-2">2</div>
+                <div class="nav-card-text"><strong>TỔNG HỢP</strong><small>Bảng điểm</small></div>
+            </button>
+            <button class="btn-nav-card" id="nav-btn-tab3" onclick="switchMainTab('tab3')">
+                <div class="nav-card-num nav-num-3">3</div>
+                <div class="nav-card-text"><strong>NHẬP LIỆU</strong><small>Chấm điểm thi đua</small></div>
+            </button>
+            <button class="btn-nav-card" id="nav-btn-tab4" onclick="switchMainTab('tab4')">
+                <div class="nav-card-num nav-num-4">4</div>
+                <div class="nav-card-text"><strong>TRỰC NHẬT</strong><small>Phân công LĐ</small></div>
+            </button>
+            <button class="btn-nav-card" id="nav-btn-tab5" onclick="requireTeacherAuth()">
+                <div class="nav-card-num nav-num-5">5</div>
+                <div class="nav-card-text"><strong>QUẢN TRỊ</strong><small>Dành cho GVCN</small></div>
+            </button>
+        </div>
+
+        <!-- TAB 1: TRANG CHỦ -->
+        <div id="panel-tab1" class="view-panel active">
+            <div class="card">
+                <button onclick="document.getElementById('rulesModal').classList.add('open')" style="width: 100%; background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; margin-bottom:16px; cursor:pointer; font-size:0.9rem; box-shadow:0 2px 4px rgba(217, 119, 6, 0.3);">
+                    <i class="fa-solid fa-scale-balanced"></i> XEM QUY CHẾ ĐÁNH GIÁ THI ĐUA VÀ RÈN LUYỆN
+                </button>
+
+                <div style="margin-bottom: 14px;">
+                    <h4 style="color:#1e3a8a; font-size:0.95rem; margin-bottom:8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;"><i class="fa-solid fa-bullhorn"></i> BẢNG TIN & THÔNG BÁO LỚP</h4>
+                    <div id="homeroom-announcements-container" style="display:flex; flex-direction:column;"></div>
+                </div>
+
+                <div style="background:#f0fdfa; border:1.5px solid #14b8a6; padding:12px; border-radius:10px; margin-bottom:14px; box-shadow:0 2px 6px rgba(20, 184, 166, 0.1);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
+                        <h4 style="color:#0f766e; font-size:0.95rem; margin:0;"><i class="fa-solid fa-broom"></i> PHÂN CÔNG TRỰC NHẬT <span id="public-duty-week-label"></span></h4>
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <select id="public-duty-week-select" onchange="renderPublicDuty()" style="padding:4px 8px; border-radius:6px; border:1px solid #14b8a6; font-weight:700; color:#0f766e; font-size:0.75rem; background:#fff;"></select>
+                        </div>
+                    </div>
+                    <div id="public-duty-list" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+                </div>
+
+                <!-- TRA CỨU HỒ SƠ THI ĐUA -->
+                <div style="background:#fff; border:1.5px solid #0ea5e9; padding:12px; border-radius:10px; margin-bottom:14px; box-shadow:0 2px 6px rgba(14, 165, 233, 0.1);">
+                    <h4 style="color:#0369a1; font-size:0.95rem; margin-bottom:8px;"><i class="fa-solid fa-magnifying-glass"></i> TRA CỨU HỒ SƠ THI ĐUA</h4>
+                    <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap;">
+                        <select id="public-student-select" style="flex:2; min-width:200px; padding:8px; border-radius:8px; border:1px solid #bae6fd; font-weight:600;"></select>
+                        <select id="search-type-select" onchange="toggleSearchType()" style="flex:1; min-width:130px; padding:8px; border-radius:8px; font-weight:700; background:#f0f9ff; color:#0369a1;">
+                            <option value="week">Theo Tuần</option>
+                            <option value="month">Theo Tháng/Kỳ/Năm</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <select id="public-detail-week-select" style="flex:2; min-width:150px; padding:8px; border-radius:8px; font-weight:600;"></select>
+                        <select id="public-detail-month-select" style="flex:2; min-width:150px; padding:8px; border-radius:8px; font-weight:600; display:none;"></select>
+                        <button class="btn-action" style="background:#0ea5e9; flex:1; min-width:100px; padding:8px;" onclick="viewStudentDetails()"><i class="fa-solid fa-search"></i> Tra cứu</button>
+                    </div>
+                    <div id="student-detail-report" style="background:#f0f9ff; margin-top:8px; padding:10px; border-radius:8px; border:1px dashed #7dd3fc; display:none; font-size:0.85rem;"></div>
+                </div>
+
+                <!-- SƠ ĐỒ LỚP -->
+                <div style="background:#fff; border:1.5px solid #3b82f6; padding:12px; border-radius:10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                        <h4 style="color:#1e3a8a; font-size:0.95rem; margin:0;"><i class="fa-solid fa-map-location-dot"></i> SƠ ĐỒ VỊ TRÍ NGỒI (4 DÃY - BÀN ĐÔI)</h4>
+                        <div style="display:flex; gap:6px;">
+                            <span id="seating-week-label" style="background:#eff6ff; color:#1e40af; padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.75rem; border:1px solid #bfdbfe;">Đang xem: Tuần 1</span>
+                            <select id="seating-month-select" onchange="updateSeatingWeekOptions()" style="padding: 4px; border-radius: 6px; font-weight: 700; border: 1px solid #3b82f6; width:auto;"></select>
+                            <select id="seating-week-select" onchange="renderSeatingMap()" style="padding: 4px; border-radius: 6px; font-weight: 700; border: 1px solid #3b82f6; width:auto;"></select>
+                        </div>
+                    </div>
+                    <div class="seating-map-container">
+                        <div class="seating-scroll-area">
+                            <div class="seating-grid-wrapper" id="seating-map-grid-container"></div>
+                            <div style="margin-top: 14px; text-align: center;">
+                                <div style="display:inline-block; min-width: 280px; background:#1e3a8a; color:#fff; padding: 8px 16px; border-radius: 6px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <i class="fa-solid fa-arrow-up mr-2" style="color:#fde047;"></i> <i class="fa-solid fa-chalkboard"></i> BẢNG LỚP
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TỔNG HỢP ĐIỂM & XẾP LOẠI (CHỈ HIỆN KHI ĐÃ NHẬP / CHỐT) -->
+        <div id="panel-tab2" class="view-panel">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                    <h3 id="public-emulation-title" style="color: #1e3a8a; font-size: 0.95rem; font-weight: 800; margin: 0;"><i class="fa-solid fa-ranking-star"></i> BẢNG ĐIỂM & XẾP LOẠI THI ĐUA</h3>
+                    <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                        <select id="emulation-view-mode" onchange="toggleSummaryMode()" style="padding: 6px 8px; border-radius: 6px; font-weight: 800; border: 1px solid #10b981; color:#047857; width:auto;">
+                            <option value="week">Xem theo Tuần</option>
+                            <option value="month">Xem Tháng (Đã chốt)</option>
+                            <option value="semester">Xem Học Kỳ (Đã chốt)</option>
+                            <option value="year">Xem Cả Năm (Đã chốt)</option>
+                        </select>
+                        <select id="public-month-select" onchange="updateSummaryWeekOptions()" style="padding: 6px 8px; border-radius: 6px; border: 1px solid #3b82f6; width:auto;"></select>
+                        <select id="public-week-select" onchange="renderPublicSummaryTable()" style="padding: 6px 8px; border-radius: 6px; border: 1px solid #3b82f6; width:auto;"></select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead id="public-summary-thead"></thead>
+                        <tbody id="public-summary-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: NHẬP ĐIỂM THI ĐUA -->
+        <div id="panel-tab3" class="view-panel">
+            <div class="card">
+                <div style="background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 10px; padding: 14px;">
+                    <h3 style="font-size: 0.95rem; color: #b91c1c; margin-bottom: 12px;"><i class="fa-solid fa-lock"></i> NHẬP LIỆU THI ĐUA (TỔ TRƯỞNG & LỚP TRƯỞNG)</h3>
+                    
+                    <div class="input-control-bar" style="margin-bottom: 10px;">
+                        <label style="font-weight: 700; color: #9f1239;">Thời gian:</label>
+                        <select id="input-month-select" onchange="updateInputWeekOptions()" style="padding: 6px; border-radius: 6px; border: 1px solid #fecdd3; width:auto;"></select>
+                        <select id="input-week-select" onchange="resetInputAuth()" style="padding: 6px; border-radius: 6px; border: 1px solid #fecdd3; width:auto;"></select>
+                        <button class="btn-action" style="background:#475569; padding: 6px 10px; font-size:0.75rem;" onclick="autoSelectCurrentWeek()"><i class="fa-solid fa-location-crosshairs"></i> Về tuần hiện tại</button>
+                    </div>
+
+                    <div class="input-control-bar" style="margin-bottom: 12px;">
+                        <label style="font-weight: 700; color: #9f1239;">Vai trò của bạn:</label>
+                        <select id="select-role-type" onchange="onRoleChange()" style="padding: 6px; border-radius: 6px; border: 1px solid #fecdd3; width:auto; font-weight:bold;">
+                            <option value="totruong">Tổ trưởng</option>
+                            <option value="loptruong">Lớp trưởng</option>
+                        </select>
+                        <div id="group-select-wrapper" style="display:flex; align-items:center; gap:4px;">
+                            <label style="font-weight: 700; color: #9f1239;">Tổ:</label>
+                            <select id="select-group-id" onchange="resetInputAuth()" style="padding: 6px; border-radius: 6px; border: 1px solid #fecdd3; width:auto;">
+                                <option value="1">Tổ 1</option><option value="2">Tổ 2</option><option value="3">Tổ 3</option><option value="4" selected>Tổ 4</option>
+                            </select>
+                        </div>
+                        <input type="password" id="group-pass-input" placeholder="Mật khẩu..." style="padding: 6px; border-radius: 6px; border: 1px solid #fecdd3; width: 110px;">
+                        <button class="btn-action" onclick="verifyAuthAndRender()" style="background:#e11d48; padding: 6px 14px;"><i class="fa-solid fa-key"></i> Mở khóa</button>
+                    </div>
+
+                    <div id="lock-status-alert" style="display:none; margin-bottom:10px; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:700;"></div>
+                    <div id="group-member-entry-container" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: PHÂN CÔNG TRỰC NHẬT -->
+        <div id="panel-tab4" class="view-panel">
+            <div class="card">
+                <div style="background: #f0fdfa; border: 1.5px solid #5eead4; border-radius: 10px; padding: 14px;">
+                    <h3 style="font-size: 0.95rem; color: #0f766e; margin-bottom: 12px;"><i class="fa-solid fa-broom"></i> PHÂN CÔNG TRỰC NHẬT (LỚP PHÓ LAO ĐỘNG)</h3>
+                    
+                    <div class="input-control-bar" style="margin-bottom: 10px; background:#f0fdf4; border-color:#86efac;">
+                        <label style="font-weight: 700; color: #166534;">Chọn tuần phân công:</label>
+                        <select id="duty-week-select" onchange="resetDutyAuth()" style="padding: 6px; border-radius: 6px; border: 1px solid #86efac; width:auto; font-weight:bold;"></select>
+                    </div>
+
+                    <div class="input-control-bar" style="margin-bottom: 12px; background:#f0fdf4; border-color:#86efac;">
+                        <label style="font-weight: 700; color: #166534;">Mật khẩu Lớp phó LĐ:</label>
+                        <input type="password" id="duty-pass-input" placeholder="Mật khẩu..." style="padding: 6px; border-radius: 6px; border: 1px solid #86efac; width: 130px;">
+                        <button class="btn-action" onclick="verifyDutyAuth()" style="background:#0d9488; padding: 6px 14px;"><i class="fa-solid fa-unlock"></i> Đăng nhập</button>
+                    </div>
+
+                    <div id="duty-entry-container" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: QUẢN TRỊ -->
+        <div id="panel-tab5" class="view-panel">
+            <div class="card">
+                <!-- CẤU HÌNH HỆ THỐNG -->
+                <div style="background:#eff6ff; border:1.5px solid #3b82f6; padding:12px; border-radius:10px; margin-bottom:14px;">
+                    <h4 style="color:#1e40af; font-size:0.95rem; margin-bottom:10px;"><i class="fa-solid fa-gears"></i> CẤU HÌNH HỆ THỐNG & HẠN NỘP ĐIỂM</h4>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:10px;">
+                        <div class="form-group mb-0">
+                            <label>Tên Trường</label>
+                            <input type="text" id="config-school" value="Trường THPT Tân Yên số 2">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label>Tên Lớp</label>
+                            <input type="text" id="config-class" value="Lớp 10A4">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label>Năm Học</label>
+                            <input type="text" id="config-year" value="2026 - 2027">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label>Giáo Viên Chủ Nhiệm</label>
+                            <input type="text" id="config-teacher" value="Trịnh Ngọc Ánh">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label>Ngày bắt đầu Tuần 1</label>
+                            <input type="date" id="config-start-date" style="border-color:#3b82f6; font-weight:bold;">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label>Hạn chót nộp (Thứ)</label>
+                            <select id="config-deadline-day" style="font-weight:bold; border-color:#3b82f6;">
+                                <option value="1">Thứ Hai</option><option value="2">Thứ Ba</option><option value="3">Thứ Tư</option>
+                                <option value="4">Thứ Năm</option><option value="5">Thứ Sáu</option><option value="6">Thứ Bảy</option><option value="0">Chủ Nhật</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label>Hạn chót nộp (Giờ)</label>
+                            <input type="number" id="config-deadline-hour" min="0" max="23" value="23" style="font-weight:bold; border-color:#3b82f6;">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label>Phạm vi áp dụng hạn chót</label>
+                            <select id="config-deadline-scope" style="font-weight:bold; border-color:#3b82f6;">
+                                <option value="week">Áp dụng linh hoạt theo từng Tuần</option>
+                                <option value="semester">Cố định áp dụng chung cho cả Kỳ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-action" style="background:#2563eb; width:100%;" onclick="saveConfigData()"><i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình toàn hệ thống</button>
+                </div>
+
+                <!-- GVCN XẾP LOẠI ĐỊNH KỲ -->
+                <div style="background:#fffbeb; border:1.5px solid #d97706; padding:16px; border-radius:12px; margin-bottom: 14px; box-shadow:0 2px 8px rgba(217, 119, 6, 0.08);">
+                    <h4 style="color:#b45309; font-size:1.05rem; margin-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-lock"></i> GVCN XẾP LOẠI ĐỊNH KỲ</h4>
+                    <p style="font-size:0.82rem; color:#92400e; margin-bottom:10px;">Chọn khoảng thời gian, bấm <strong>Tải bảng xếp loại</strong> để kiểm tra/chỉnh sửa trực tiếp kết quả theo cột gợi ý, sau đó bấm <strong>🔒 Chốt dữ liệu chính thức</strong> để công khai cho PH và học sinh xem.</p>
+                    <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; align-items:center;">
+                        <select id="admin-grading-period" style="padding:8px; border-radius:8px; border:1.5px solid #d97706; font-weight:bold; width:auto;">
+                            <optgroup label="Xếp Loại Tháng">
+                                <option value="Tháng 9">Tháng 9</option><option value="Tháng 10">Tháng 10</option><option value="Tháng 11">Tháng 11</option>
+                                <option value="Tháng 12">Tháng 12</option><option value="Tháng 1">Tháng 1</option><option value="Tháng 2">Tháng 2</option>
+                                <option value="Tháng 3">Tháng 3</option><option value="Tháng 4">Tháng 4</option><option value="Tháng 5">Tháng 5</option>
+                            </optgroup>
+                            <optgroup label="Xếp Loại Học Kỳ & Năm">
+                                <option value="Học Kỳ 1">Học Kỳ 1</option><option value="Học Kỳ 2">Học Kỳ 2</option><option value="Cả Năm">Cả Năm</option>
+                            </optgroup>
+                        </select>
+                        <button class="btn-action" style="background:#d97706;" onclick="loadAdminGradingTable()"><i class="fa-solid fa-table"></i> Tải bảng xếp loại</button>
+                        <button class="btn-action" style="background:#10b981; margin-left:auto;" onclick="exportAdminTableToCSV()"><i class="fa-solid fa-file-excel"></i> Xuất Excel</button>
+                    </div>
+                    <div id="admin-grading-editor-container" style="display:none;">
+                        <div class="table-responsive" style="max-height:400px; background:#fff; border-radius:8px;">
+                            <table id="admin-grading-table-export">
+                                <thead id="admin-grading-editor-thead"></thead>
+                                <tbody id="admin-grading-editor-tbody"></tbody>
+                            </table>
+                        </div>
+                        <button class="btn-action" style="background:#16a34a; width:100%; margin-top:10px; padding:10px;" onclick="finalizeGradingPeriod()"><i class="fa-solid fa-lock"></i> 🔒 CHỐT DỮ LIỆU CHÍNH THỨC</button>
+                    </div>
+                </div>
+
+                <!-- TỔNG HỢP LỖI TUẦN & GỬI ZALO -->
+                <div style="background:#fdf4ff; border:1.5px solid #d946ef; padding:16px; border-radius:12px; margin-bottom: 14px; box-shadow:0 2px 8px rgba(217, 70, 239, 0.08);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                        <h4 style="color:#86198f; font-size:1.05rem; margin:0;"><i class="fa-solid fa-comment-sms"></i> TỔNG HỢP LỖI & SOẠN TIN NHẮN ZALO THEO TUẦN</h4>
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <select id="admin-zalo-week-select" onchange="renderAdminZaloSummary()" style="padding:6px 10px; border-radius:6px; font-weight:700; border:1px solid #d946ef; color:#86198f; background:#fff;"></select>
+                            <button class="btn-action" style="background:#d946ef; padding:6px 12px; font-size:0.78rem;" onclick="renderAdminZaloSummary()"><i class="fa-solid fa-rotate"></i> Tải danh sách</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="max-height:400px;">
+                        <table>
+                            <thead>
+                                <tr style="background:#fce7f3; color:#86198f;">
+                                    <th style="width:40px;">STT</th>
+                                    <th style="width:130px; text-align:left;">Học sinh</th>
+                                    <th style="width:75px;">Tổng điểm</th>
+                                    <th style="text-align:left;">Nội dung tin nhắn Zalo (Có thể sửa trực tiếp)</th>
+                                    <th style="width:105px;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-zalo-summary-tbody">
+                                <tr><td colspan="5" style="padding:12px; color:#701a75; font-style:italic;">Chọn tuần và bấm "Tải danh sách" ở trên...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- QUẢN LÝ HỌC SINH -->
+                <div style="background:#fff; border:1.5px solid #0ea5e9; padding:16px; border-radius:12px; margin-bottom: 14px; box-shadow:0 2px 8px rgba(14, 165, 233, 0.08);">
+                    <h4 style="color:#0369a1; font-size:1.05rem; margin-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-users-gear"></i> QUẢN LÝ DANH SÁCH HỌC SINH & SĐT ZALO</h4>
+                    <p style="font-size:0.82rem; color:#64748b; margin-bottom:12px;">💡 Mẹo: Copy 2 cột (Họ tên + SĐT) từ Excel và dán trực tiếp vào ô dưới đây.</p>
+                    
+                    <div style="margin-bottom: 14px;">
+                        <textarea id="bulk-student-input" rows="3" placeholder="Nguyễn Văn A    0912345678&#10;Trần Thị B    0987654321" style="width:100%; padding:10px; border-radius:8px; border:1.5px solid #cbd5e1; font-family:monospace;"></textarea>
+                        <div style="display:flex; gap:8px; margin-top:8px;">
+                            <button class="btn-action" style="background:#16a34a; font-size:0.8rem;" onclick="importBulkStudents(false)"><i class="fa-solid fa-plus"></i> Nhập thêm</button>
+                            <button class="btn-action" style="background:#b91c1c; font-size:0.8rem;" onclick="importBulkStudents(true)"><i class="fa-solid fa-arrows-rotate"></i> Xóa cũ & Thay thế toàn bộ</button>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:8px; margin-bottom:14px; border-top:1.5px dashed #e2e8f0; padding-top:12px; flex-wrap:wrap;">
+                        <input type="text" id="new-student-name" placeholder="Thêm tên học sinh..." style="flex:2; min-width:180px; padding:8px; border-radius:8px; border:1.5px solid #cbd5e1;">
+                        <input type="text" id="new-student-phone" placeholder="Số điện thoại Zalo..." style="flex:1; min-width:130px; padding:8px; border-radius:8px; border:1.5px solid #cbd5e1;">
+                        <button class="btn-action" style="background:#0ea5e9; padding:8px 16px;" onclick="addNewStudent()"><i class="fa-solid fa-user-plus"></i> Thêm học sinh</button>
+                    </div>
+
+                    <div class="table-responsive" style="max-height:350px;">
+                        <table>
+                            <thead>
+                                <tr style="background:#f8fafc; color:#1e3a8a;">
+                                    <th style="width:45px;">STT</th>
+                                    <th style="text-align:left;">Họ và Tên học sinh</th>
+                                    <th style="width:150px;">SĐT Zalo</th>
+                                    <th style="width:140px;">Chức vụ</th>
+                                    <th style="width:110px;">Thao tác Zalo</th>
+                                    <th style="width:55px;">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-student-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SƠ ĐỒ & ĐỔI CHỖ -->
+                <div style="background:#fff; border:1.5px solid #d97706; padding:12px; border-radius:10px; margin-bottom: 14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                        <h4 style="color:#b45309; font-size:0.95rem; margin:0;"><i class="fa-solid fa-chair"></i> SƠ ĐỒ LỚP & ĐỔI CHỖ</h4>
+                        <button onclick="resetDataToFactory()" style="background:#dc2626; color:#fff; border:none; padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.72rem; cursor:pointer;"><i class="fa-solid fa-rotate-left"></i> Khôi phục dữ liệu gốc</button>
+                    </div>
+
+                    <div style="background:#fffbeb; border:1px solid #fde047; padding:8px 10px; border-radius:8px; margin-bottom:10px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                        <span style="font-weight:700; font-size:0.78rem; color:#92400e;"><i class="fa-solid fa-right-left"></i> Đổi chỗ nguyên Tổ:</span>
+                        <select id="swap-group-1" style="padding:4px; border-radius:6px; border:1px solid #d97706; font-size:0.78rem; width:auto; font-weight:bold;">
+                            <option value="1">Tổ 1</option><option value="2">Tổ 2</option><option value="3">Tổ 3</option><option value="4">Tổ 4</option>
+                        </select>
+                        <span style="font-weight:bold; font-size:0.78rem;">với</span>
+                        <select id="swap-group-2" style="padding:4px; border-radius:6px; border:1px solid #d97706; font-size:0.78rem; width:auto; font-weight:bold;">
+                            <option value="1">Tổ 1</option><option value="2" selected>Tổ 2</option><option value="3">Tổ 3</option><option value="4">Tổ 4</option>
+                        </select>
+                        <button class="btn-action" style="background:#d97706; padding:4px 10px; font-size:0.75rem;" onclick="swapEntireGroups()"><i class="fa-solid fa-shuffle"></i> Thực hiện đổi</button>
+                    </div>
+
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 10px;">
+                        <button class="btn-action" style="background:#16a34a; padding:6px 10px;" onclick="autoSuggestSeating()"><i class="fa-solid fa-lightbulb"></i> Gợi ý xếp chỗ</button>
+                        <button class="btn-action" style="background:#0284c7; padding:6px 10px;" onclick="autoShuffleWithinGroups()"><i class="fa-solid fa-shuffle"></i> Đảo (Tổ)</button>
+                        <button class="btn-action" style="background:#7c3aed; padding:6px 10px;" onclick="autoShuffleAll()"><i class="fa-solid fa-shuffle"></i> Đảo (Lớp)</button>
+                    </div>
+                    <div class="seating-map-container" style="background:#fffbeb; border-color:#fde047;">
+                        <div class="seating-scroll-area">
+                            <div class="seating-grid-wrapper" id="admin-seating-map-grid-container"></div>
+                            <div style="margin-top: 14px; text-align: center;">
+                                <div style="display:inline-block; min-width: 280px; background:#1e3a8a; color:#fff; padding: 8px 16px; border-radius: 6px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <i class="fa-solid fa-arrow-up mr-2" style="color:#fde047;"></i> <i class="fa-solid fa-chalkboard"></i> BẢNG LỚP
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:#f8fafc; border:1.5px solid var(--border); padding:12px; border-radius:10px; margin-bottom:14px;">
+                    <h4 style="color:#1e3a8a; font-size:0.95rem; margin-bottom:8px;"><i class="fa-solid fa-scroll"></i> ĐĂNG BẢNG TIN LỚP</h4>
+                    <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+                        <select id="auto-report-week" style="padding:8px; border-radius:8px; border:1px solid #cbd5e1; font-weight:600; width:auto;"></select>
+                        <button class="btn-action" style="background:#0ea5e9; font-size:0.8rem; padding:8px 12px;" onclick="generateAutoReport()"><i class="fa-solid fa-wand-magic-sparkles"></i> Tạo báo cáo tự động</button>
+                    </div>
+                    <div class="form-group"><input type="text" id="admin-notice-title" placeholder="Tiêu đề thông báo..."></div>
+                    <div class="form-group"><textarea id="admin-notice-content" rows="4" placeholder="Nội dung thông báo..."></textarea></div>
+                    <button class="btn-action" style="width:100%; font-size:0.9rem;" onclick="publishAnnouncement()"><i class="fa-solid fa-paper-plane"></i> Gửi Thông Báo Lên Bảng Tin</button>
+                </div>
+                <div style="background:#fff; border:1px solid #e2e8f0; padding:12px; border-radius:10px;">
+                    <h4 style="color:#334155; font-size:0.9rem; margin-bottom:8px;"><i class="fa-solid fa-trash-can"></i> Xóa thông báo đã đăng:</h4>
+                    <div id="admin-announcements-manager-container" style="display:flex; flex-direction:column; gap:6px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BẢN QUYỀN CHUẨN DƯỚI CHÂN TRANG -->
+        <footer style="text-align:center; padding:12px 0; color:#94a3b8; font-size:0.75rem; font-weight:600;">
+            Bản quyền sở hữu cô giáo Trịnh Ngọc Ánh – GV THPT Tân Yên số 2 Bắc Ninh
+        </footer>
+    </div>
+
+    <!-- MODAL QUY CHẾ VĂN PHONG CHUẨN MỰC -->
+    <div class="modal-overlay" id="rulesModal">
+        <div class="auth-card" style="max-width:750px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:2px solid var(--primary); padding-bottom:8px;">
+                <h4 style="font-weight: 800; color:var(--primary); font-size:1.1rem; margin:0;"><i class="fa-solid fa-scale-balanced"></i> QUY CHẾ ĐÁNH GIÁ THI ĐUA VÀ RÈN LUYỆN</h4>
+                <button onclick="document.getElementById('rulesModal').classList.remove('open')" style="background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:900; cursor:pointer;">✕</button>
+            </div>
+            <div style="font-size:0.85rem; color:#1e293b; max-height:70vh; overflow-y:auto; line-height:1.6; padding-right:8px;">
+                <div style="background:#fef3c7; border:1px solid #fde047; padding:10px; border-radius:8px; margin-bottom:12px;">
+                    <p style="margin:0; font-weight:600; color:#92400e;">📌 NGUYÊN TẮC CHUNG: Mỗi học sinh có 100 điểm rèn luyện cơ bản mỗi tuần. Điểm số được điều chỉnh dựa trên kết quả thực hiện nội quy, các điểm cộng thành tích và điểm trừ vi phạm theo quy định chung của lớp.</p>
+                </div>
+                
+                <h5 style="color:#b91c1c; margin:10px 0 4px 0; font-weight:800; font-size:0.95rem; border-left:4px solid #b91c1c; padding-left:8px;">🔴 CÁC MỤC TRỪ ĐIỂM KỶ LUẬT (Vi phạm nhiều lần tính lũy tiến):</h5>
+                <ul style="padding-left:20px; margin-bottom:10px;">
+                    <li><strong>Nghỉ học:</strong> Có phép: -20đ/buổi; Không phép: -50đ/buổi.</li>
+                    <li><strong>Đi muộn:</strong> Dưới 3 phút: -10đ; Từ 3-5 phút: -20đ; Trên 5 phút: -30đ.</li>
+                    <li><strong>Tác phong:</strong> Không đồng phục, thiếu thẻ học sinh: -20đ/buổi.</li>
+                    <li><strong>Ý thức lớp học:</strong> Nói chuyện, làm việc riêng, mất trật tự: -20đ/lần.</li>
+                    <li><strong>Vị trí ngồi:</strong> Ngồi sai vị trí theo sơ đồ lớp: -10đ/tiết.</li>
+                    <li><strong>Vệ sinh:</strong> Trực nhật chưa sạch, đổ rác không đúng nơi quy định: -5đ/tiết.</li>
+                    <li><strong>An toàn giao thông:</strong> Không đội mũ bảo hiểm hoặc đi xe trong khu vực trường: -30đ/lần.</li>
+                    <li><strong>Sổ đầu bài & Cờ đỏ:</strong> Vi phạm bị ghi nhận trừ điểm hoặc ghi tên trong sổ đầu bài: -30đ/lỗi.</li>
+                    <li><strong>Học tập:</strong> Thiếu đồ dùng, dụng cụ học tập: -20đ/lần; Không chuẩn bị bài, không thuộc bài cũ: -30đ/lần.</li>
+                    <li><strong>Thiết bị điện tử:</strong> Sử dụng điện thoại di động trong giờ học trái quy định: -100đ và xử lý theo nội quy.</li>
+                    <li><strong>Cán bộ lớp:</strong> Không hoàn thành nhiệm vụ quản lý được giao. Nộp báo cáo quá thời hạn quy định ảnh hưởng đến thi đua chung.</li>
+                </ul>
+
+                <h5 style="color:#16a34a; margin:10px 0 4px 0; font-weight:800; font-size:0.95rem; border-left:4px solid #16a34a; padding-left:8px;">🟢 CÁC MỤC CỘNG ĐIỂM & KHUYẾN KHÍCH:</h5>
+                <ul style="padding-left:20px; margin-bottom:12px;">
+                    <li><strong>Học tập & Phát biểu:</strong> Đạt điểm tốt (>9) kiểm tra thường xuyên (+5đ) hoặc định kỳ (+10đ). Tích cực phát biểu xây dựng bài (+2đ/lần), thuyết trình xuất sắc (+10đ).</li>
+                    <li><strong>Phong trào & Việc tốt:</strong> Tham gia hoạt động phong trào lớp, trường (+20đ/lần; đạt giải cộng thêm theo thành tích). Hành động đẹp, nhặt được của rơi trả lại người mất (+10 đến +20đ).</li>
+                    <li><strong>Điểm trách nhiệm cán sự lớp:</strong> Lớp trưởng, Bí thư (+30đ/tuần); Lớp phó, Tổ trưởng (+20đ/tuần); Sao đỏ, Giữ sổ đầu bài (+10đ/tuần).</li>
+                </ul>
+
+                <h5 style="color:#1e3a8a; margin:14px 0 6px 0; font-weight:800; font-size:1rem; border-bottom:2px solid #3b82f6; padding-bottom:4px;">📊 TIÊU CHÍ XẾP LOẠI RÈN LUYỆN (THÁNG, HỌC KỲ, CẢ NĂM)</h5>
+                <p style="margin-top:6px;"><strong>1. Đánh giá theo Tuần:</strong> Chấm điểm gốc và tổng hợp điểm rèn luyện để theo dõi tiến độ thi đua nội bộ trong tuần.</p>
+                <p style="margin-top:6px;"><strong>2. Xếp loại Tháng (Dựa trên điểm trung bình và điểm khống chế tuần):</strong></p>
+                <ul style="padding-left:20px; margin-bottom:6px;">
+                    <li><strong>TỐT:</strong> Điểm trung bình từ 90 điểm trở lên (Không có tuần nào dưới 80 điểm).</li>
+                    <li><strong>KHÁ:</strong> Điểm trung bình từ 80 đến dưới 90 điểm (Không có tuần nào dưới 65 điểm).</li>
+                    <li><strong>ĐẠT:</strong> Điểm trung bình từ 50 đến dưới 80 điểm.</li>
+                    <li><strong>CHƯA ĐẠT:</strong> Điểm trung bình dưới 50 điểm hoặc có vi phạm kỷ luật nghiêm trọng.</li>
+                </ul>
+                <p style="margin-top:6px;"><strong>3. Xếp loại Học Kỳ:</strong> Tổng hợp kết quả rèn luyện qua các tháng theo chuẩn quy định của nhà trường, đảm bảo quá trình phấn đấu liên tục.</p>
+                <p style="margin-top:6px;"><strong>4. Xếp loại Cả Năm:</strong> Tổng hợp kết quả hai học kỳ, trong đó chú trọng kết quả học kỳ II để ghi nhận sự tiến bộ và nỗ lực rèn luyện của học sinh.</p>
+                <p style="margin-top:8px; font-style:italic; color:#475569;">💡 Lưu ý: Hệ thống phần mềm đóng vai trò hỗ trợ thống kê dữ liệu, giáo viên chủ nhiệm xem xét toàn diện và quyết định kết quả đánh giá cuối cùng.</p>
+            </div>
+            <button onclick="document.getElementById('rulesModal').classList.remove('open')" class="btn-action" style="width:100%; margin-top:16px; background:#64748b; font-size:1rem;"><i class="fa-solid fa-check"></i> Đã hiểu rõ quy chế</button>
+        </div>
+    </div>
+
+    <!-- MODAL CHI TIẾT ĐIỂM -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="auth-card" style="max-width:450px; width:95%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                <h4 id="detail-modal-title" style="font-weight: 800; color:var(--primary); font-size:1.1rem; margin:0;"><i class="fa-solid fa-file-invoice"></i> Sao kê điểm chi tiết</h4>
+                <button onclick="document.getElementById('detailModal').classList.remove('open')" style="background:#e2e8f0; border:none; width:28px; height:28px; border-radius:50%; font-weight:900; cursor:pointer;">✕</button>
+            </div>
+            <div id="detail-modal-content" style="font-size:0.85rem; color:#334155; overflow-y:auto; margin-bottom:8px; max-height:60vh;"></div>
+        </div>
+    </div>
+
+    <!-- MODAL KHÓA BẢO MẬT QUẢN TRỊ -->
+    <div class="modal-overlay" id="authModal">
+        <div class="auth-card" style="text-align: center; max-width: 350px;">
+            <div style="font-size:2.5rem; color:#ea580c; margin-bottom:10px;"><i class="fa-solid fa-shield-halved"></i></div>
+            <h4 style="font-weight: 800; color:#0f172a; margin-bottom: 16px; font-size:1.1rem;">BẢNG MẬT QUẢN TRỊ VIÊN</h4>
+            <input type="password" id="admin-pass-input" style="margin-bottom: 16px; padding:12px; width:100%; border-radius:8px; border:1px solid #cbd5e1; text-align:center; font-size:1rem; font-weight:bold;">
+            <div style="display: flex; gap: 8px;">
+                <button onclick="document.getElementById('authModal').classList.remove('open')" class="btn-action" style="flex:1; background:#f1f5f9; color:#475569;">Hủy bỏ</button>
+                <button onclick="verifyTeacherPassword()" class="btn-action" style="flex:1; background:#2563eb;">Xác Nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadLocalData() {
+            try {
+                let s = localStorage.getItem('students'); if(s) STATE.students = JSON.parse(s);
+                let p = localStorage.getItem('phones'); if(p) STATE.phones = JSON.parse(p);
+                let pos = localStorage.getItem('positions'); if(pos) STATE.positions = JSON.parse(pos);
+                let em = localStorage.getItem('emulation'); if(em) STATE.emulation = JSON.parse(em);
+                let m = localStorage.getItem('map'); if(m) STATE.map = JSON.parse(m);
+                let n = localStorage.getItem('notices'); if(n) STATE.notices = JSON.parse(n);
+                let d = localStorage.getItem('duty'); if(d) STATE.duty = JSON.parse(d);
+                let og = localStorage.getItem('officialGrades'); if(og) STATE.officialGrades = JSON.parse(og);
+                let c = localStorage.getItem('config'); if(c) STATE.config = { ...STATE.config, ...JSON.parse(c) };
+            } catch(e) {}
+        }
+
+        window.onload = function() {
+            // Nạp dữ liệu cục bộ và hiển thị UI ngay lập tức
+            loadLocalData();
+            buildUI();
+
+            // Đồng bộ Firebase ngầm, không làm gián đoạn hiển thị
+            try {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                STATE.dbRef = firebase.database().ref('THPT_Tan_Yen_2_' + MA_DU_LIEU);
+                STATE.dbRef.once('value').then((snapshot) => {
+                    if (snapshot.exists()) {
+                        let data = snapshot.val();
+                        if(data.students) STATE.students = JSON.parse(data.students);
+                        if(data.phones) STATE.phones = JSON.parse(data.phones);
+                        if(data.positions) STATE.positions = JSON.parse(data.positions);
+                        if(data.emulation) STATE.emulation = JSON.parse(data.emulation);
+                        if(data.map) STATE.map = JSON.parse(data.map);
+                        if(data.notices) STATE.notices = JSON.parse(data.notices);
+                        if(data.duty) STATE.duty = JSON.parse(data.duty);
+                        if(data.officialGrades) STATE.officialGrades = JSON.parse(data.officialGrades);
+                        if(data.config) STATE.config = { ...STATE.config, ...JSON.parse(data.config) };
+                    } else { initDefaultMap(); }
+                    buildUI();
+                }).catch((e) => { 
+                    console.warn("Firebase sync error:", e);
+                });
+            } catch (err) {
+                console.warn("Firebase init error:", err);
+            }
+        };
+    </script>
+</body>
+</html>
