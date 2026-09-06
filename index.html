@@ -4,134 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sổ Chủ Nhiệm Điện Tử - Lớp 11A5</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- ============================================================ -->
-    <!-- BẢN QUYỀN THUỘC SỞ HỮU CHÍNH CHỦ: CÔ TRỊNH NGỌC ÁNH (BẮC NINH) -->
-    <!-- ============================================================ -->
     <script> const MA_DU_LIEU = "11A5"; </script>
-
-    <!-- THƯ VIỆN HỖ TRỢ -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-    @media (max-width: 600px) {
-        body { font-size: 13.5px !important; padding: 4px; }
-        table, th, td { font-size: 12.5px !important; padding: 4px !important; }
-        button, select, input { font-size: 13.5px !important; padding: 6px !important; }
-        .auth-card, #detailModal .auth-card { width: 95vw !important; max-width: 95vw !important; padding: 12px !important; }
-        .nav-bar-grid { grid-template-columns: repeat(2, 1fr) !important; }
-        .modern-banner-wrapper { padding: 12px 8px !important; }
-        .col-group { width: 140px !important; padding: 4px !important; }
-        .seat-box { width: 60px !important; height: 45px !important; }
-        .seat-name { font-size: 0.55rem !important; }
-        .search-controls { flex-direction: column; align-items: stretch !important; }
-        .search-controls select, .search-controls button { width: 100% !important; margin-bottom: 6px; }
-        .table-responsive { overflow-x: auto; }
-        .action-buttons-group { flex-direction: column; }
-        .action-buttons-group button { width: 100%; margin-bottom: 6px; }
-    }
         :root { --primary: #1e40af; --bg: #f1f5f9; --text-main: #0f172a; --border: #cbd5e1; --font-main: 'Be Vietnam Pro', sans-serif; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text-main); line-height: 1.4; padding: 6px; font-size: 13.5px; }
         .container { max-width: 1200px; margin: 0 auto; }
-
         .modern-banner-wrapper { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%); border-radius: 12px; padding: 16px 10px; margin-bottom: 10px; color: #ffffff; text-align: center; box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15); }
         .banner-line-1 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;}
         .banner-line-2 { font-size: 0.85rem; font-weight: 700; color: #93c5fd; margin-bottom: 2px; }
         .banner-line-3 { font-size: 0.75rem; color: #fde047; font-weight: 600; }
-
         .nav-bar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px; }
         @media (min-width: 600px) { .nav-bar-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 900px) { .nav-bar-grid { grid-template-columns: repeat(5, 1fr); } }
         .btn-nav-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 8px; cursor: pointer; background: #ffffff; display: flex; align-items: center; gap: 6px; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
         .btn-nav-card.active { border-color: var(--primary); background: #eff6ff; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);}
         .nav-card-num { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0; }
-        .nav-num-1 { background: linear-gradient(135deg, #d97706, #b45309); } 
-        .nav-num-2 { background: linear-gradient(135deg, #16a34a, #15803d); } 
-        .nav-num-3 { background: linear-gradient(135deg, #dc2626, #991b1b); } 
-        .nav-num-4 { background: linear-gradient(135deg, #0d9488, #0f766e); } 
-        .nav-num-5 { background: linear-gradient(135deg, #2563eb, #1d4ed8); } 
+        .nav-num-1 { background: linear-gradient(135deg, #d97706, #b45309); } .nav-num-2 { background: linear-gradient(135deg, #16a34a, #15803d); } .nav-num-3 { background: linear-gradient(135deg, #dc2626, #991b1b); } .nav-num-4 { background: linear-gradient(135deg, #0d9488, #0f766e); } .nav-num-5 { background: linear-gradient(135deg, #2563eb, #1d4ed8); } 
         .nav-card-text { text-align: left; }
         .nav-card-text strong { display: block; font-size: 0.72rem; color: #1e293b; font-weight: 800; }
         .nav-card-text small { font-size: 0.6rem; color: #64748b; white-space: nowrap;}
-
-        .view-panel { display: none; } 
-        .view-panel.active { display: block; animation: fadeIn 0.3s; }
+        .view-panel { display: none; } .view-panel.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .card { background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .table-responsive { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: #fff; min-width: 600px;}
         th, td { padding: 9px 8px; border-bottom: 1px solid var(--border); border-right: 1px solid #f1f5f9; text-align: center; }
         th { background: #f8fafc; color: #1e3a8a; font-weight: 800; }
         td:nth-child(2) { text-align: left; font-weight: 700; color: #0f172a; min-width: 140px; }
-
         .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: inline-flex; justify-content: center; align-items: center; gap: 6px; transition: background 0.2s; text-decoration: none;}
         .btn-action:hover { filter: brightness(1.1); }
         .form-group { margin-bottom: 10px; }
         .form-group label { display:block; font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:4px; text-transform:uppercase;}
         .form-group input, .form-group textarea, select { width: 100%; padding: 8px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.85rem; outline: none; background: #fff;}
         .input-control-bar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; background: #fff1f2; padding: 10px; border-radius: 8px; align-items: center; border: 1.5px solid #fecdd3; }
-        
         .student-entry-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .student-entry-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; }
-        
         .error-grid-options { display: grid; grid-template-columns: repeat(1, 1fr); gap: 6px; }
         @media (min-width: 500px) { .error-grid-options { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 850px) { .error-grid-options { grid-template-columns: repeat(3, 1fr); } }
-        
         .error-counter-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center; }
         .error-label { font-size: 0.78rem; font-weight: 700; color: #334155; }
         .counter-controls { display: flex; align-items: center; gap: 4px; }
         .btn-count { width: 28px; height: 28px; border-radius: 6px; border: none; background: #e2e8f0; font-weight: 900; font-size: 1rem; cursor: pointer; }
         .btn-count:disabled { opacity: 0.4; cursor: not-allowed; }
-        
         .count-val { width: 44px; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; font-weight: 800; outline: none; padding: 4px 2px; background: #fff;}
-        .count-val:disabled { background: #f1f5f9; color: #94a3b8; }
-
         .seating-map-container { background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .seating-scroll-area { width: max-content; min-width: 100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 5px; }
         .seating-grid-wrapper { display: flex; justify-content: center; gap: 16px; margin-bottom: 12px; width: max-content; }
         .col-group { display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 8px; width: 200px; }
-        
-        .group-tto-1 { border: 2.5px solid #ca8a04 !important; background-color: #fef08a !important; } 
-        .group-tto-2 { border: 2.5px solid #d97706 !important; background-color: #fed7aa !important; } 
-        .group-tto-3 { border: 2.5px solid #475569 !important; background-color: #cbd5e1 !important; } 
-        .group-tto-4 { border: 2.5px solid #16a34a !important; background-color: #bbf7d0 !important; } 
-
+        .group-tto-1 { border: 2.5px solid #ca8a04 !important; background-color: #fef08a !important; } .group-tto-2 { border: 2.5px solid #d97706 !important; background-color: #fed7aa !important; } .group-tto-3 { border: 2.5px solid #475569 !important; background-color: #cbd5e1 !important; } .group-tto-4 { border: 2.5px solid #16a34a !important; background-color: #bbf7d0 !important; } 
         .seat-row { display: flex; gap: 4px; padding: 5px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.15); justify-content: center; margin-bottom: 4px; }
         .seat-box { width: 85px; height: 55px; border: 1px solid #64748b; background: #ffffff; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2px; position: relative; transition: 0.2s; cursor: pointer; }
         .seat-box:hover { border-color: #ea580c; background: #fff7ed;}
         .seat-box.selected-seat { border: 2px solid #ea580c; background: #fff7ed; transform: scale(1.05); z-index: 10;}
         .seat-name { font-size: 0.6rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-height: 1.2; margin-top: 2px; color: #0f172a; }
         .seat-box.empty-seat { background: #f8fafc; border: 1px dashed #94a3b8; opacity: 0.6; }
-        .seat-box.empty-seat .seat-name { font-size: 0.55rem; color: #64748b; font-weight: 500; font-style: italic; }
-
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 2000; justify-content: center; align-items: center; padding: 10px; }
         .modal-overlay.open { display: flex; }
         .auth-card { background: #ffffff; width: 95%; max-width: 600px; border-radius: 12px; padding: 16px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2);}
-        
         .modern-announcement { background: linear-gradient(to right, #ffffff, #f8fafc); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 10px; }
-        .modern-announcement-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap:wrap; gap:6px;}
-        .modern-announcement-title { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 800; color: #0f172a; }
-        .modern-announcement-icon { background: #e0f2fe; color: #0284c7; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
-        .modern-announcement-date { font-size: 0.7rem; color: #64748b; background: #f1f5f9; padding: 3px 8px; border-radius: 12px; font-weight: 600; }
-        .modern-announcement-content { font-size: 0.85rem; color: #475569; padding-left: 36px; white-space: pre-wrap; line-height: 1.5; }
+        
+        @media (max-width: 600px) {
+            body { font-size: 13.5px !important; padding: 4px; }
+            table, th, td { font-size: 12.5px !important; padding: 4px !important; }
+            button, select, input { font-size: 13.5px !important; padding: 6px !important; }
+            .auth-card, #detailModal .auth-card { width: 95vw !important; max-width: 95vw !important; padding: 12px !important; }
+            .nav-bar-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .modern-banner-wrapper { padding: 12px 8px !important; }
+            .col-group { width: 140px !important; padding: 4px !important; }
+            .seat-box { width: 60px !important; height: 45px !important; }
+            .seat-name { font-size: 0.55rem !important; }
+            .search-controls { flex-direction: column; align-items: stretch !important; }
+            .search-controls select, .search-controls button { width: 100% !important; margin-bottom: 6px; }
+            .table-responsive { overflow-x: auto; }
+            .action-buttons-group { flex-direction: column; }
+            .action-buttons-group button { width: 100%; margin-bottom: 6px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- BANNER -->
+        <!-- BANNER CHÍNH THỨC -->
         <div class="modern-banner-wrapper">
             <div class="banner-line-1" id="banner-class-name">SỔ CHỦ NHIỆM ĐIỆN TỬ</div>
-            <div class="banner-line-2"><span id="banner-class">Đang tải...</span> — Năm học <span id="banner-year">...</span></div>
+            <div class="banner-line-2"><span id="banner-class">Lớp Đang Tải...</span> — Năm học <span id="banner-year">...</span></div>
             <div class="banner-line-3">GVCN: <span id="banner-teacher">...</span> — <span id="banner-school">...</span></div>
             <div id="live-realtime-week-badge" style="margin-top:8px; display:inline-block; background:rgba(255,255,255,0.25); padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-clock mr-1"></i> Đang tải dữ liệu...</div>
         </div>
@@ -163,7 +128,7 @@
         <!-- TAB 1: TRANG CHỦ -->
         <div id="panel-tab1" class="view-panel active">
             <div class="card">
-                <button onclick="document.getElementById('rulesModal').classList.add('open')" style="width: 100%; background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; margin-bottom:16px; cursor:pointer; font-size:0.9rem; box-shadow:0 2px 4px rgba(217, 119, 6, 0.3);">
+                <button onclick="document.getElementById('rulesModal').classList.add('open')" style="width: 100%; background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; margin-bottom:16px; cursor:pointer; font-size:0.9rem;">
                     <i class="fa-solid fa-scale-balanced"></i> XEM QUY CHẾ ĐÁNH GIÁ THI ĐUA VÀ RÈN LUYỆN
                 </button>
 
@@ -172,8 +137,7 @@
                     <div id="homeroom-announcements-container" style="display:flex; flex-direction:column;"></div>
                 </div>
 
-                <!-- BẢNG PHÂN CÔNG TRỰC NHẬT -->
-                <div style="background:#f0fdfa; border:1.5px solid #14b8a6; padding:12px; border-radius:10px; margin-bottom:14px; box-shadow:0 2px 6px rgba(20, 184, 166, 0.1);">
+                <div style="background:#f0fdfa; border:1.5px solid #14b8a6; padding:12px; border-radius:10px; margin-bottom:14px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
                         <h4 style="color:#0f766e; font-size:0.95rem; margin:0;"><i class="fa-solid fa-broom"></i> PHÂN CÔNG TRỰC NHẬT <span id="public-duty-week-label"></span></h4>
                         <div style="display:flex; gap:6px; align-items:center;">
@@ -183,8 +147,7 @@
                     <div id="public-duty-list" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
                 </div>
 
-                <!-- TRA CỨU HỒ SƠ THI ĐUA -->
-                <div style="background:#fff; border:1.5px solid #0ea5e9; padding:12px; border-radius:10px; margin-bottom:14px; box-shadow:0 2px 6px rgba(14, 165, 233, 0.1);">
+                <div style="background:#fff; border:1.5px solid #0ea5e9; padding:12px; border-radius:10px; margin-bottom:14px;">
                     <h4 style="color:#0369a1; font-size:0.95rem; margin-bottom:8px;"><i class="fa-solid fa-magnifying-glass"></i> TRA CỨU HỒ SƠ THI ĐUA</h4>
                     <div class="search-controls" style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
                         <select id="public-student-select" style="flex:2; min-width:150px; padding:8px; border-radius:8px; border:1px solid #bae6fd; font-weight:600;"></select>
@@ -201,7 +164,6 @@
                     <div id="student-detail-report" style="background:#f0f9ff; margin-top:8px; padding:10px; border-radius:8px; border:1px dashed #7dd3fc; display:none; font-size:0.85rem;"></div>
                 </div>
 
-                <!-- SƠ ĐỒ LỚP -->
                 <div style="background:#fff; border:1.5px solid #3b82f6; padding:12px; border-radius:10px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
                         <h4 style="color:#1e3a8a; font-size:0.95rem; margin:0;"><i class="fa-solid fa-map-location-dot"></i> SƠ ĐỒ VỊ TRÍ NGỒI (4 DÃY - BÀN ĐÔI)</h4>
@@ -215,7 +177,7 @@
                         <div class="seating-scroll-area">
                             <div class="seating-grid-wrapper" id="seating-map-grid-container"></div>
                             <div style="margin-top: 14px; text-align: center;">
-                                <div style="display:inline-block; min-width: 280px; background:#1e3a8a; color:#fff; padding: 8px 16px; border-radius: 6px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                <div style="display:inline-block; min-width: 280px; background:#1e3a8a; color:#fff; padding: 8px 16px; border-radius: 6px; font-weight: 800; font-size: 0.9rem;">
                                     <i class="fa-solid fa-arrow-up mr-2" style="color:#fde047;"></i> <i class="fa-solid fa-chalkboard"></i> BẢNG LỚP
                                 </div>
                             </div>
@@ -356,7 +318,7 @@
                     <button class="btn-action" style="background:#2563eb; width:100%;" onclick="saveConfigData()"><i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình toàn hệ thống</button>
                 </div>
 
-                <!-- TỔNG KẾT ĐỊNH KỲ (ĐỂ XUẤT EXCEL THÁNG) -->
+                <!-- TỔNG KẾT ĐỊNH KỲ (XUẤT EXCEL) -->
                 <div style="background:#f8fafc; border:1.5px solid #3b82f6; padding:12px; border-radius:10px; margin-bottom: 14px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
                         <h4 style="color:#1e40af; font-size:0.95rem; margin:0;"><i class="fa-solid fa-chart-line"></i> TỔNG KẾT ĐỊNH KỲ (XEM & XUẤT EXCEL)</h4>
@@ -398,9 +360,10 @@
                 <div style="background:#fdf4ff; border:1.5px solid #d946ef; padding:16px; border-radius:12px; margin-bottom: 14px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
                         <h4 style="color:#86198f; font-size:1.05rem; margin:0;"><i class="fa-solid fa-comment-sms"></i> TỔNG HỢP LỖI & SOẠN TIN NHẮN ZALO THEO TUẦN</h4>
-                        <div style="display:flex; gap:6px; align-items:center;">
+                        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                             <select id="admin-zalo-week-select" onchange="renderAdminZaloSummary()" style="padding:6px 10px; border-radius:6px; font-weight:700; border:1px solid #d946ef; color:#86198f; background:#fff;"></select>
                             <button class="btn-action" style="background:#d946ef; padding:6px 12px; font-size:0.78rem;" onclick="renderAdminZaloSummary()"><i class="fa-solid fa-rotate"></i> Tải danh sách</button>
+                            <button class="btn-action" style="background:#059669; padding:6px 12px; font-size:0.78rem;" onclick="copyAllZaloMessages()"><i class="fa-solid fa-copy"></i> Copy gửi Nhóm Lớp</button>
                         </div>
                     </div>
                     <div class="table-responsive" style="max-height:400px;">
@@ -411,7 +374,7 @@
                                     <th style="width:130px; text-align:left;">Học sinh</th>
                                     <th style="width:75px;">Tổng điểm</th>
                                     <th style="text-align:left;">Nội dung tin nhắn Zalo (Có thể sửa trực tiếp)</th>
-                                    <th style="width:105px;">Thao tác</th>
+                                    <th style="width:105px;">Mở riêng</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-zalo-summary-tbody">
@@ -421,7 +384,7 @@
                     </div>
                 </div>
 
-                <!-- XUẤT PHIẾU BÁO CÁO (FILE MỀM PDF CHO PHỤ HUYNH) -->
+                <!-- XUẤT PHIẾU BÁO CÁO (FILE MỀM PDF) -->
                 <div style="background:#fff; border:1.5px solid #8b5cf6; padding:16px; border-radius:12px; margin-bottom: 14px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
                         <h4 style="color:#6d28d9; font-size:1.05rem; margin:0;"><i class="fa-solid fa-file-pdf"></i> XUẤT PHIẾU BÁO CÁO RÈN LUYỆN (FILE MỀM PDF)</h4>
@@ -447,7 +410,6 @@
                 <div style="background:#fff; border:1.5px solid #0ea5e9; padding:16px; border-radius:12px; margin-bottom: 14px;">
                     <h4 style="color:#0369a1; font-size:1.05rem; margin-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-users-gear"></i> QUẢN LÝ DANH SÁCH HỌC SINH & SĐT ZALO</h4>
                     <p style="font-size:0.82rem; color:#64748b; margin-bottom:12px;">💡 Copy 2 cột (Họ tên + SĐT) từ Excel và dán trực tiếp vào ô dưới đây.</p>
-                    
                     <div style="margin-bottom: 14px;">
                         <textarea id="bulk-student-input" rows="3" placeholder="Nguyễn Văn A    0912345678&#10;Trần Thị B    0987654321" style="width:100%; padding:10px; border-radius:8px; border:1.5px solid #cbd5e1; font-family:monospace;"></textarea>
                         <div style="display:flex; gap:8px; margin-top:8px;">
@@ -455,13 +417,11 @@
                             <button class="btn-action" style="background:#b91c1c; font-size:0.8rem;" onclick="importBulkStudents(true)"><i class="fa-solid fa-arrows-rotate"></i> Xóa cũ & Thay thế toàn bộ</button>
                         </div>
                     </div>
-
                     <div style="display:flex; gap:8px; margin-bottom:14px; border-top:1.5px dashed #e2e8f0; padding-top:12px; flex-wrap:wrap;">
                         <input type="text" id="new-student-name" placeholder="Thêm tên học sinh..." style="flex:2; min-width:180px; padding:8px; border-radius:8px; border:1.5px solid #cbd5e1;">
                         <input type="text" id="new-student-phone" placeholder="Số điện thoại Zalo..." style="flex:1; min-width:130px; padding:8px; border-radius:8px; border:1.5px solid #cbd5e1;">
                         <button class="btn-action" style="background:#0ea5e9; padding:8px 16px;" onclick="addNewStudent()"><i class="fa-solid fa-user-plus"></i> Thêm học sinh</button>
                     </div>
-
                     <div class="table-responsive" style="max-height:350px;">
                         <table>
                             <thead>
@@ -485,7 +445,6 @@
                         <h4 style="color:#b45309; font-size:0.95rem; margin:0;"><i class="fa-solid fa-chair"></i> SƠ ĐỒ LỚP & ĐỔI CHỖ</h4>
                         <button onclick="resetDataToFactory()" style="background:#dc2626; color:#fff; border:none; padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.72rem; cursor:pointer;"><i class="fa-solid fa-rotate-left"></i> Khôi phục dữ liệu gốc</button>
                     </div>
-
                     <div style="background:#fffbeb; border:1px solid #fde047; padding:8px 10px; border-radius:8px; margin-bottom:10px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                         <span style="font-weight:700; font-size:0.78rem; color:#92400e;"><i class="fa-solid fa-right-left"></i> Đổi chỗ nguyên Tổ:</span>
                         <select id="swap-group-1" style="padding:4px; border-radius:6px; border:1px solid #d97706; font-size:0.78rem; width:auto; font-weight:bold;">
@@ -497,7 +456,6 @@
                         </select>
                         <button class="btn-action" style="background:#d97706; padding:4px 10px; font-size:0.75rem;" onclick="swapEntireGroups()"><i class="fa-solid fa-shuffle"></i> Thực hiện đổi</button>
                     </div>
-
                     <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 10px;">
                         <button class="btn-action" style="background:#16a34a; padding:6px 10px;" onclick="autoSuggestSeating()"><i class="fa-solid fa-lightbulb"></i> Gợi ý xếp chỗ</button>
                         <button class="btn-action" style="background:#0284c7; padding:6px 10px;" onclick="autoShuffleWithinGroups()"><i class="fa-solid fa-shuffle"></i> Đảo (Tổ)</button>
@@ -538,7 +496,7 @@
         </footer>
     </div>
 
-    <!-- MODAL QUY CHẾ VĂN PHONG CHUẨN MỰC -->
+    <!-- MODAL QUY CHẾ -->
     <div class="modal-overlay" id="rulesModal">
         <div class="auth-card" style="max-width:750px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:2px solid var(--primary); padding-bottom:8px;">
@@ -547,42 +505,26 @@
             </div>
             <div style="font-size:0.85rem; color:#1e293b; max-height:70vh; overflow-y:auto; line-height:1.6; padding-right:8px;">
                 <div style="background:#fef3c7; border:1px solid #fde047; padding:10px; border-radius:8px; margin-bottom:12px;">
-                    <p style="margin:0; font-weight:600; color:#92400e;">📌 NGUYÊN TẮC CHUNG: Mỗi học sinh có 100 điểm rèn luyện cơ bản mỗi tuần. Điểm số được điều chỉnh dựa trên kết quả thực hiện nội quy, các điểm cộng thành tích và điểm trừ vi phạm theo quy định chung của lớp.</p>
+                    <p style="margin:0; font-weight:600; color:#92400e;">📌 NGUYÊN TẮC CHUNG: Mỗi học sinh có 100 điểm rèn luyện cơ bản mỗi tuần.</p>
                 </div>
-                
                 <h5 style="color:#b91c1c; margin:10px 0 4px 0; font-weight:800; font-size:0.95rem; border-left:4px solid #b91c1c; padding-left:8px;">🔴 CÁC MỤC TRỪ ĐIỂM KỶ LUẬT:</h5>
                 <ul style="padding-left:20px; margin-bottom:10px;">
                     <li><strong>Nghỉ học:</strong> Có phép: -20đ/buổi; Không phép: -50đ/buổi.</li>
                     <li><strong>Đi muộn:</strong> Dưới 3 phút: -10đ; Từ 3-5 phút: -20đ; Trên 5 phút: -30đ.</li>
                     <li><strong>Tác phong:</strong> Không đồng phục, thiếu thẻ học sinh: -20đ/buổi.</li>
-                    <li><strong>Ý thức lớp học:</strong> Nói chuyện, làm việc riêng, mất trật tự: -20đ/lần.</li>
-                    <li><strong>Vị trí ngồi:</strong> Ngồi sai vị trí theo sơ đồ lớp: -10đ/tiết.</li>
-                    <li><strong>Vệ sinh:</strong> Trực nhật chưa sạch, đổ rác không đúng nơi quy định: -5đ/tiết.</li>
-                    <li><strong>An toàn giao thông:</strong> Không đội mũ bảo hiểm hoặc đi xe trong khu vực trường: -30đ/lần.</li>
-                    <li><strong>Sổ đầu bài & Cờ đỏ:</strong> Vi phạm bị ghi nhận trừ điểm hoặc ghi tên trong sổ đầu bài: -30đ/lỗi.</li>
-                    <li><strong>Học tập:</strong> Thiếu đồ dùng, dụng cụ học tập: -20đ/lần; Không chuẩn bị bài, không thuộc bài cũ: -30đ/lần.</li>
-                    <li><strong>Thiết bị điện tử:</strong> Sử dụng điện thoại di động trong giờ học trái quy định: -100đ và xử lý theo nội quy.</li>
-                    <li><strong>Cán bộ lớp:</strong> Không hoàn thành nhiệm vụ quản lý được giao. Nộp báo cáo quá thời hạn.</li>
+                    <li><strong>Ý thức:</strong> Nói chuyện, làm việc riêng: -20đ/lần. Ngồi sai sơ đồ: -10đ/tiết.</li>
+                    <li><strong>Vệ sinh:</strong> Trực nhật chưa sạch: -5đ/tiết.</li>
+                    <li><strong>Giao thông:</strong> Không đội MBH, đi xe trong trường: -30đ/lần.</li>
+                    <li><strong>Sổ đầu bài & Cờ đỏ:</strong> Lỗi trừ điểm: -30đ/lỗi.</li>
+                    <li><strong>Học tập:</strong> Thiếu đồ dùng: -20đ/lần; Không thuộc bài: -30đ/lần.</li>
+                    <li><strong>Điện thoại:</strong> Sử dụng trái phép: -100đ.</li>
                 </ul>
-
                 <h5 style="color:#16a34a; margin:10px 0 4px 0; font-weight:800; font-size:0.95rem; border-left:4px solid #16a34a; padding-left:8px;">🟢 CÁC MỤC CỘNG ĐIỂM & KHUYẾN KHÍCH:</h5>
                 <ul style="padding-left:20px; margin-bottom:12px;">
-                    <li><strong>Học tập & Phát biểu:</strong> Đạt điểm tốt (>9) kiểm tra thường xuyên (+5đ) hoặc định kỳ (+10đ). Tích cực phát biểu xây dựng bài (+2đ/lần), thuyết trình xuất sắc (+10đ).</li>
-                    <li><strong>Phong trào & Việc tốt:</strong> Tham gia hoạt động phong trào lớp, trường (+20đ/lần). Hành động đẹp, nhặt được của rơi trả lại người mất (+10 đến +20đ).</li>
-                    <li><strong>Điểm trách nhiệm cán sự lớp:</strong> Lớp trưởng, Bí thư (+30đ/tuần); Lớp phó, Tổ trưởng (+20đ/tuần); Sao đỏ, Giữ sổ đầu bài (+10đ/tuần).</li>
+                    <li><strong>Học tập:</strong> Điểm tốt TX (+5đ), Định kỳ (+10đ). Phát biểu (+2đ/lần).</li>
+                    <li><strong>Việc tốt:</strong> Phong trào (+20đ/lần). Nhặt được của rơi (+10 đến +20đ).</li>
+                    <li><strong>Cán sự:</strong> LT, BT (+30đ/tuần); LP, Tổ trưởng (+20đ/tuần); Sao đỏ (+10đ/tuần).</li>
                 </ul>
-
-                <h5 style="color:#1e3a8a; margin:14px 0 6px 0; font-weight:800; font-size:1rem; border-bottom:2px solid #3b82f6; padding-bottom:4px;">📊 TIÊU CHÍ XẾP LOẠI RÈN LUYỆN</h5>
-                <p style="margin-top:6px;"><strong>1. Cấp Tuần:</strong> Chấm điểm gốc và tổng hợp điểm rèn luyện.</p>
-                <p style="margin-top:6px;"><strong>2. Cấp Tháng (Điểm TB + Khống chế tuần):</strong></p>
-                <ul style="padding-left:20px; margin-bottom:6px;">
-                    <li><strong>TỐT:</strong> Điểm trung bình ≥ 90 điểm. Không tuần nào dưới 80.</li>
-                    <li><strong>KHÁ:</strong> Điểm trung bình từ 80 đến < 90 điểm. Không tuần nào dưới 65.</li>
-                    <li><strong>ĐẠT:</strong> Điểm trung bình từ 50 đến < 80 điểm.</li>
-                    <li><strong>CHƯA ĐẠT:</strong> Điểm trung bình < 50 điểm hoặc có vi phạm kỷ luật.</li>
-                </ul>
-                <p style="margin-top:6px;"><strong>3. Cấp Học Kỳ:</strong> Tổng hợp kết quả rèn luyện qua các tháng, đảm bảo quá trình phấn đấu liên tục.</p>
-                <p style="margin-top:6px;"><strong>4. Cấp Cả Năm:</strong> Tổng hợp kết quả hai học kỳ, trong đó chú trọng kết quả học kỳ II.</p>
             </div>
             <button onclick="document.getElementById('rulesModal').classList.remove('open')" class="btn-action" style="width:100%; margin-top:16px; background:#64748b; font-size:1rem;"><i class="fa-solid fa-check"></i> Đã hiểu rõ quy chế</button>
         </div>
@@ -617,7 +559,7 @@
 
     <script>
         // ==========================================
-        // CÁC HÀM XỬ LÝ LÕI HỆ THỐNG MỚI
+        // CÁC HÀM XỬ LÝ LÕI HỆ THỐNG
         // ==========================================
         window.renderMonthlySummary = function() {
             const month = document.getElementById("admin-month-summary-select").value;
@@ -680,9 +622,25 @@
             document.body.removeChild(link);
         }
 
-        // ==========================================
-        // XUẤT BÁO CÁO (PDF) CHO 1 HS HOẶC CẢ LỚP
-        // ==========================================
+        window.copyAllZaloMessages = function() {
+            let week = document.getElementById("admin-zalo-week-select").value;
+            let fullText = `🌟 TỔNG HỢP KẾT QUẢ THI ĐUA ${week.toUpperCase()} 🌟\n\n`;
+            
+            STATE.students.forEach((name, idx) => {
+                let stt = idx + 1;
+                let textElem = document.getElementById(`zalo-msg-${stt}`);
+                if(textElem) {
+                    fullText += `[STT ${stt}] ${name}:\n${textElem.value.trim()}\n\n`;
+                }
+            });
+            
+            navigator.clipboard.writeText(fullText).then(() => {
+                alert("✅ Đã COPY toàn bộ danh sách tin nhắn! Thầy/cô hãy mở nhóm Zalo lớp và dán (Paste) vào nhé.");
+            }).catch(err => {
+                alert("Trình duyệt không hỗ trợ Copy tự động. Vui lòng bôi đen và copy thủ công.");
+            });
+        }
+
         window.exportStudentReportPDF = function(mode) {
             let type = document.getElementById("admin-print-type").value;
             let period = document.getElementById("admin-print-period").value;
@@ -931,7 +889,7 @@
             html2pdf().set(opt).from(hiddenDiv).save().then(() => {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
-                alert("✅ Đã tạo thành công File Báo Cáo PDF! Thầy/cô có thể gửi file này cho phụ huynh qua Zalo.");
+                alert("✅ Đã tạo thành công File Báo Cáo PDF! Thầy/cô kiểm tra mục tải về của máy.");
             }).catch(err => {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
