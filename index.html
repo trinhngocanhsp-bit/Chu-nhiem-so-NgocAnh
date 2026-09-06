@@ -22,7 +22,7 @@
         body { font-size: 13.5px !important; padding: 4px; }
         table, th, td { font-size: 12.5px !important; padding: 4px !important; }
         button, select, input { font-size: 13.5px !important; padding: 6px !important; }
-        .auth-card { width: 95% !important; padding: 12px !important; }
+        .auth-card, #detailModal .auth-card { width: 95% !important; max-width: 400px !important; padding: 14px !important; }
         .nav-bar-grid { grid-template-columns: repeat(2, 1fr) !important; }
         .modern-banner-wrapper { padding: 12px 8px !important; }
         .col-group { width: 140px !important; padding: 4px !important; }
@@ -676,11 +676,10 @@
         }
 
         window.onload = function() {
-            // Nạp dữ liệu cục bộ và hiển thị UI ngay lập tức để không bị đơ
+            // Nạp dữ liệu cục bộ và hiển thị UI ngay lập tức
             loadLocalData();
             buildUI();
-
-            // Đồng bộ Firebase ngầm
+            
             try {
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
@@ -1223,13 +1222,17 @@
             } else if (type === 'month') {
                 let res = evaluateMonth(stt, period);
                 let monthGrade = getGradeForPeriod(stt, period);
+                let weeks = MONTH_WEEKS[period] || [];
+                let weekScores = weeks.map(w => {
+                    let weekKey = "Tuần " + w;
+                    let isSub = isStudentWeekSubmitted(stt, weekKey);
+                    let wd = STATE.emulation[weekKey] || {};
+                    return `T${w}: ${isSub ? calculateScore(stt, wd[stt]) : '--'}`;
+                }).join(' | ');
+
                 summaryHTML = `
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
-                        <tr>
-                            <td style="padding:8px; border:1px solid #000; background:#f2f2f2; width:30%;"><strong>Xếp loại ${period}</strong></td>
-                            <td style="padding:8px; border:1px solid #000; font-size:16px;"><strong style="color:#b91c1c;">${monthGrade}</strong> (Điểm TB: ${res.avg} - Thấp nhất: ${res.minW})</td>
-                        </tr>
-                    </table>
+                    <p style="margin-bottom:4px;"><strong>Điểm chi tiết từng tuần:</strong> ${weekScores}</p>
+                    <p style="font-size:16px;"><strong>Tổng hợp ${period}:</strong> Điểm TB: ${res.avg} | Thấp nhất: ${res.minW} => Xếp loại: <strong style="color:#b91c1c;">${monthGrade}</strong></p>
                 `;
             } else if (type === 'semester' || type === 'year') {
                 let months = [];
@@ -1246,7 +1249,7 @@
                     <thead>
                         <tr>
                             <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Tháng</th>
-                            <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Chi tiết điểm các tuần</th>
+                            <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Điểm từng tuần</th>
                             <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Xếp loại Tháng</th>
                         </tr>
                     </thead>
@@ -1323,7 +1326,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 20%;">Thời gian</th>
-                                <th>Chi tiết vi phạm / Điểm cộng</th>
+                                <th>Nội dung chi tiết</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1352,9 +1355,7 @@
             }, 500);
         }
 
-        // ==========================================
-        // CÁC HÀM HIỂN THỊ CÒN LẠI (TỔNG HỢP, NHẬP ĐIỂM...)
-        // ==========================================
+        // --- BẢNG CÔNG KHAI (CHỈ HIỆN ĐIỂM KHI ĐÃ NHẬP VÀ XẾP LOẠI KHI ĐÃ CHỐT) ---
         window.renderPublicSummaryTable = function() {
             const mode = document.getElementById("emulation-view-mode").value;
             const tbody = document.getElementById("public-summary-tbody");
@@ -1460,6 +1461,7 @@
             }
         }
 
+        // --- GIAO DIỆN CHỐT & SỬA XẾP LOẠI TRONG TAB QUẢN TRỊ ---
         window.loadAdminGradingTable = function() {
             let period = document.getElementById("admin-grading-period").value;
             let editorContainer = document.getElementById("admin-grading-editor-container");
@@ -1708,7 +1710,7 @@
             });
 
             reportDiv.innerHTML = `<h5 style="color:#0369a1; font-size:0.95rem; margin-bottom:10px; border-bottom:1px solid #bae6fd; padding-bottom:6px;"><i class="fa-solid fa-folder-open"></i> Hồ sơ thi đua ${timeLabel}: <strong style="text-transform:uppercase;">${name}</strong></h5>`;
-            if(totalRecords === 0) reportDiv.innerHTML += `<div style="background:#dcfce7; color:#166534; padding:10px; border-radius:6px; font-weight:700;"><i class="fa-solid fa-face-smile-beam"></i> Không có vi phạm trong khoảng thời gian này.</div>`;
+            if(totalRecords === 0) reportDiv.innerHTML += `<div style="background:#dcfce7; color:#166534; padding:10px; border-radius:6px; font-weight:700;"><i class="fa-solid fa-face-smile-beam"></i> Tuyệt vời! Không có vi phạm nào trong ${timeLabel}.</div>`;
             else reportDiv.innerHTML += listHTML + `</ul>`;
             reportDiv.style.display = "block";
         }
