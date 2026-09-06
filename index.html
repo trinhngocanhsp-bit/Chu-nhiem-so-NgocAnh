@@ -22,7 +22,7 @@
         body { font-size: 13.5px !important; padding: 4px; }
         table, th, td { font-size: 12.5px !important; padding: 4px !important; }
         button, select, input { font-size: 13.5px !important; padding: 6px !important; }
-        .auth-card, #detailModal .auth-card { width: 95% !important; max-width: 400px !important; padding: 14px !important; }
+        .auth-card { width: 95% !important; padding: 12px !important; }
         .nav-bar-grid { grid-template-columns: repeat(2, 1fr) !important; }
         .modern-banner-wrapper { padding: 12px 8px !important; }
         .col-group { width: 140px !important; padding: 4px !important; }
@@ -166,6 +166,7 @@
                     <div id="homeroom-announcements-container" style="display:flex; flex-direction:column;"></div>
                 </div>
 
+                <!-- BẢNG PHÂN CÔNG TRỰC NHẬT -->
                 <div style="background:#f0fdfa; border:1.5px solid #14b8a6; padding:12px; border-radius:10px; margin-bottom:14px; box-shadow:0 2px 6px rgba(20, 184, 166, 0.1);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
                         <h4 style="color:#0f766e; font-size:0.95rem; margin:0;"><i class="fa-solid fa-broom"></i> PHÂN CÔNG TRỰC NHẬT <span id="public-duty-week-label"></span></h4>
@@ -218,7 +219,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: TỔNG HỢP ĐIỂM & XẾP LOẠI (CÔNG KHAI) -->
+        <!-- TAB 2: TỔNG HỢP ĐIỂM & XẾP LOẠI -->
         <div id="panel-tab2" class="view-panel">
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
@@ -396,12 +397,12 @@
                     </div>
                 </div>
 
-                <!-- IN PHIẾU BÁO CÁO KỶ LUẬT (NEW) -->
+                <!-- XUẤT PHIẾU BÁO CÁO (FILE MỀM PDF) -->
                 <div style="background:#fff; border:1.5px solid #8b5cf6; padding:16px; border-radius:12px; margin-bottom: 14px; box-shadow:0 2px 8px rgba(139, 92, 246, 0.08);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-                        <h4 style="color:#6d28d9; font-size:1.05rem; margin:0;"><i class="fa-solid fa-print"></i> IN PHIẾU BÁO CÁO CHI TIẾT KỶ LUẬT</h4>
+                        <h4 style="color:#6d28d9; font-size:1.05rem; margin:0;"><i class="fa-solid fa-file-pdf"></i> XUẤT PHIẾU BÁO CÁO KỶ LUẬT (FILE MỀM)</h4>
                     </div>
-                    <p style="font-size:0.82rem; color:#64748b; margin-bottom:12px;">💡 Chọn học sinh và khoảng thời gian để xuất phiếu báo cáo (PDF/In giấy) gửi phụ huynh.</p>
+                    <p style="font-size:0.82rem; color:#64748b; margin-bottom:12px;">💡 Chọn học sinh và khoảng thời gian để xuất file phiếu báo cáo (chọn "Save as PDF") gửi phụ huynh. Bảng sẽ tổng hợp điểm số từng tuần, xếp loại định kỳ và chi tiết các lỗi.</p>
                     <div class="search-controls" style="display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap;">
                         <select id="admin-print-student" style="flex:2; min-width:200px; padding:8px; border-radius:8px; border:1px solid #c4b5fd; font-weight:600;"></select>
                         <select id="admin-print-type" onchange="toggleAdminPrintType()" style="flex:1; min-width:130px; padding:8px; border-radius:8px; font-weight:700; background:#f5f3ff; color:#6d28d9;">
@@ -413,7 +414,7 @@
                     </div>
                     <div class="search-controls" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                         <select id="admin-print-period" style="flex:2; min-width:150px; padding:8px; border-radius:8px; font-weight:600;"></select>
-                        <button class="btn-action" style="background:#8b5cf6; flex:1; min-width:150px; padding:8px;" onclick="printStudentReport()"><i class="fa-solid fa-print"></i> In Phiếu Báo Cáo</button>
+                        <button class="btn-action" style="background:#8b5cf6; flex:1; min-width:150px; padding:8px;" onclick="exportStudentReport()"><i class="fa-solid fa-file-export"></i> Xuất File Báo Cáo</button>
                     </div>
                 </div>
 
@@ -675,9 +676,11 @@
         }
 
         window.onload = function() {
+            // Nạp dữ liệu cục bộ và hiển thị UI ngay lập tức để không bị đơ
             loadLocalData();
             buildUI();
-            
+
+            // Đồng bộ Firebase ngầm
             try {
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
@@ -961,7 +964,7 @@
         }
 
         // ==========================================
-        // THUẬT TOÁN TÍNH ĐIỂM & ĐÁNH GIÁ (SỬA LỖI 100 ĐIỂM)
+        // THUẬT TOÁN TÍNH ĐIỂM & ĐÁNH GIÁ
         // ==========================================
         function getRespPoint(stt) {
             let pos = STATE.positions[stt];
@@ -998,20 +1001,16 @@
             return totalPen;
         }
 
-        // Kiểm tra xem tuần này học sinh đã được nộp điểm chưa (Chống lỗi trống = chưa nhập)
         function isStudentWeekSubmitted(stt, weekName) {
             let wd = STATE.emulation[weekName];
             if (!wd) return false;
-            // Nếu lớp trưởng đã nộp toàn lớp
             if (wd['loptruong_submitted']) return true;
-            // Nếu tổ trưởng của tổ bạn đó đã nộp
             for(let g=1; g<=4; g++) {
                 let members = getGroupMembers(g);
                 if (members.includes(stt)) {
                     return !!wd['to' + g + '_submitted'];
                 }
             }
-            // Fallback: nếu chưa xếp tổ nhưng có bất kỳ ai nộp báo cáo
             return !!(wd['to1_submitted'] || wd['to2_submitted'] || wd['to3_submitted'] || wd['to4_submitted'] || (wd[stt] && Object.keys(wd[stt]).length > 0));
         }
 
@@ -1030,7 +1029,7 @@
 
         function evaluateMonth(stt, monthName) {
             let scores = getValidScoresForMonth(stt, monthName);
-            if (scores.length === 0) return { avg: '--', minW: '--', grade: "--" }; // Không có tuần nào được nhập
+            if (scores.length === 0) return { avg: '--', minW: '--', grade: "--" }; 
             
             let sum = scores.reduce((a,b)=>a+b, 0);
             let avg = sum / scores.length;
@@ -1086,6 +1085,9 @@
             return "ĐẠT";
         }
 
+        // ==========================================
+        // EXPORT EXCEL
+        // ==========================================
         window.exportToCSV = function() {
             let activeTab = document.querySelector(".view-panel.active").id;
             let tbody = document.getElementById("public-summary-tbody");
@@ -1147,9 +1149,9 @@
         }
 
         // ==========================================
-        // IN PHIẾU BÁO CÁO KỶ LUẬT (NEW TỐI ƯU GIAO DIỆN)
+        // XUẤT PHIẾU BÁO CÁO (FILE MỀM PDF)
         // ==========================================
-        window.printStudentReport = function() {
+        window.exportStudentReport = function() {
             let stt = document.getElementById("admin-print-student").value;
             if(!stt) return alert("Vui lòng chọn học sinh!");
             let type = document.getElementById("admin-print-type").value;
@@ -1167,34 +1169,49 @@
             }
 
             let reportContent = "";
-            let totalErrors = 0;
+            let totalErrorsCountOverall = 0;
+            let totalValidWeeks = 0;
 
             targetWeeks.forEach(weekName => {
                 let data = STATE.emulation[weekName]?.[stt] || {};
                 let isSub = isStudentWeekSubmitted(stt, weekName); 
-                if(!isSub) return; 
+                if(!isSub) {
+                    reportContent += `<tr><td style="padding:8px; border:1px solid #000; text-align:center;"><strong>${weekName}</strong><br><span style="font-size:12px; color:#475569;">(-- điểm)</span></td><td style="padding:8px; border:1px solid #000; text-align:center; font-style:italic;">Chưa có dữ liệu</td></tr>`;
+                    return;
+                }
                 
+                totalValidWeeks++;
                 let weekDetails = [];
+                let errorCountThisWeek = 0;
+
                 ERROR_TYPES.forEach(err => {
                     let count = data[err.key] || 0;
                     if(count > 0) {
-                        if(err.pen === 'custom_add') weekDetails.push(`${err.label} (+${count}đ)`);
-                        else if(err.pen === 'custom_sub') weekDetails.push(`${err.label} (-${count}đ)`);
-                        else if(err.pen < 0) weekDetails.push(`${err.label} (+${Math.abs(err.pen)*count}đ)`);
-                        else weekDetails.push(`${err.label} (SL:${count} / -${calculatePenalty(err.pen, count)}đ)`);
+                        if(err.pen === 'custom_add') { weekDetails.push(`${err.label} (+${count}đ)`); }
+                        else if(err.pen === 'custom_sub') { weekDetails.push(`${err.label} (-${count}đ)`); errorCountThisWeek += count; }
+                        else if(err.pen < 0) { weekDetails.push(`${err.label} (+${Math.abs(err.pen)*count}đ)`); }
+                        else { weekDetails.push(`${err.label} (SL: ${count} / -${calculatePenalty(err.pen, count)}đ)`); errorCountThisWeek += count; }
                     }
                 });
-                if(data.penalty_1_5x) weekDetails.push(`Phạt quá hạn 1.5x (-${data.penalty_1_5x}đ)`);
+                if(data.penalty_1_5x) { weekDetails.push(`Phạt quá hạn 1.5x (-${data.penalty_1_5x}đ)`); errorCountThisWeek++; }
 
-                if(weekDetails.length > 0) {
-                    let score = calculateScore(stt, data);
-                    reportContent += `<tr><td style="padding:8px; border:1px solid #000; text-align:center;"><strong>${weekName}</strong><br><span style="font-size:13px; color:#475569;">(Điểm: ${score})</span></td><td style="padding:8px; border:1px solid #000; line-height:1.5;">${weekDetails.join('<br>')}</td></tr>`;
-                    totalErrors++;
-                }
+                let score = calculateScore(stt, data);
+                totalErrorsCountOverall += errorCountThisWeek;
+
+                let detailStr = weekDetails.length > 0 ? weekDetails.join('<br>') : `<span style="color:#16a34a; font-weight:bold;">Thực hiện tốt nội quy, không có vi phạm.</span>`;
+
+                reportContent += `<tr>
+                    <td style="padding:8px; border:1px solid #000; text-align:center;">
+                        <strong>${weekName}</strong><br>
+                        <span style="font-size:14px; font-weight:bold; color:${score<80?'#dc2626':'#16a34a'};">${score} điểm</span><br>
+                        <span style="font-size:12px; color:#64748b;">(Mắc ${errorCountThisWeek} lỗi)</span>
+                    </td>
+                    <td style="padding:8px; border:1px solid #000; line-height:1.5;">${detailStr}</td>
+                </tr>`;
             });
 
-            if(totalErrors === 0) {
-                reportContent = `<tr><td colspan="2" style="padding:15px; border:1px solid #000; text-align:center; font-style:italic;">Học sinh không có vi phạm nào trong thời gian này. Hoàn thành xuất sắc nhiệm vụ!</td></tr>`;
+            if(totalValidWeeks === 0) {
+                reportContent = `<tr><td colspan="2" style="padding:15px; border:1px solid #000; text-align:center; font-style:italic;">Chưa có dữ liệu đánh giá nào được ghi nhận trong thời gian này.</td></tr>`;
             }
 
             let summaryHTML = "";
@@ -1206,17 +1223,13 @@
             } else if (type === 'month') {
                 let res = evaluateMonth(stt, period);
                 let monthGrade = getGradeForPeriod(stt, period);
-                let weeks = MONTH_WEEKS[period] || [];
-                let weekScores = weeks.map(w => {
-                    let weekKey = "Tuần " + w;
-                    let isSub = isStudentWeekSubmitted(stt, weekKey);
-                    let wd = STATE.emulation[weekKey] || {};
-                    return `T${w}: ${isSub ? calculateScore(stt, wd[stt]) : '--'}`;
-                }).join(' | ');
-
                 summaryHTML = `
-                    <p style="margin-bottom:4px;"><strong>Điểm chi tiết từng tuần:</strong> ${weekScores}</p>
-                    <p style="font-size:16px;"><strong>Tổng hợp ${period}:</strong> Điểm TB: ${res.avg} | Thấp nhất: ${res.minW} => Xếp loại: <strong style="color:#b91c1c;">${monthGrade}</strong></p>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+                        <tr>
+                            <td style="padding:8px; border:1px solid #000; background:#f2f2f2; width:30%;"><strong>Xếp loại ${period}</strong></td>
+                            <td style="padding:8px; border:1px solid #000; font-size:16px;"><strong style="color:#b91c1c;">${monthGrade}</strong> (Điểm TB: ${res.avg} - Thấp nhất: ${res.minW})</td>
+                        </tr>
+                    </table>
                 `;
             } else if (type === 'semester' || type === 'year') {
                 let months = [];
@@ -1228,12 +1241,12 @@
 
                 let gradeOverall = getGradeForPeriod(stt, period);
 
-                summaryHTML += `<p style="font-weight:bold; margin-bottom:6px;">1. BẢNG TỔNG HỢP ĐIỂM SỐ & XẾP LOẠI CÁC THÁNG</p>`;
-                summaryHTML += `<table style="margin-bottom: 15px; border-collapse: collapse; width: 100%; font-size:14px;">
+                summaryHTML += `<p style="font-weight:bold; margin-bottom:6px; font-size:16px; text-transform:uppercase;">1. BẢNG TỔNG HỢP ĐIỂM SỐ & XẾP LOẠI CÁC THÁNG</p>`;
+                summaryHTML += `<table style="margin-bottom: 20px; border-collapse: collapse; width: 100%; font-size:14px;">
                     <thead>
                         <tr>
                             <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Tháng</th>
-                            <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Điểm từng tuần</th>
+                            <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Chi tiết điểm các tuần</th>
                             <th style="border: 1px solid #000; padding: 6px; background: #f2f2f2;">Xếp loại Tháng</th>
                         </tr>
                     </thead>
@@ -1247,17 +1260,21 @@
                         let isSub = isStudentWeekSubmitted(stt, weekKey);
                         let wd = STATE.emulation[weekKey] || {};
                         let s = isSub ? calculateScore(stt, wd[stt]) : '--';
-                        return `T${w}: ${s}`;
+                        return `T${w}: <strong>${s}</strong>`;
                     }).join(' | ');
 
                     summaryHTML += `<tr>
                         <td style="border: 1px solid #000; padding: 6px; text-align:center;"><strong>${m}</strong></td>
                         <td style="border: 1px solid #000; padding: 6px; text-align:center;">${weekScores}</td>
-                        <td style="border: 1px solid #000; padding: 6px; text-align:center; font-weight:bold;">${mGrade}</td>
+                        <td style="border: 1px solid #000; padding: 6px; text-align:center; font-weight:bold; color:#1e40af;">${mGrade}</td>
                     </tr>`;
                 });
                 summaryHTML += `</tbody></table>`;
-                summaryHTML += `<p style="font-size: 16px; margin-bottom:20px;"><strong>=> XẾP LOẠI CHUNG ${period.toUpperCase()}: <span style="font-size: 18px; color: #b91c1c;">${gradeOverall}</span></strong></p>`;
+                summaryHTML += `
+                    <div style="background:#fefce8; border:1px solid #fde047; padding:10px; text-align:center; margin-bottom:20px;">
+                        <span style="font-size: 16px;"><strong>=> XẾP LOẠI RÈN LUYỆN CHUNG ${period.toUpperCase()}: <span style="font-size: 20px; color: #b91c1c;">${gradeOverall}</span></strong></span>
+                    </div>
+                `;
             }
 
             let printWindow = window.open('', '', 'width=800,height=800');
@@ -1301,12 +1318,12 @@
 
                     ${summaryHTML}
 
-                    <p style="font-weight:bold; margin-bottom:6px;">${(type === 'semester' || type === 'year') ? '2. ' : ''}BẢNG CHI TIẾT VI PHẠM / ĐIỂM CỘNG</p>
+                    <p style="font-weight:bold; margin-bottom:6px; font-size:16px; text-transform:uppercase;">${(type === 'semester' || type === 'year') ? '2. ' : ''}BẢNG CHI TIẾT ĐIỂM & VI PHẠM TỪNG TUẦN</p>
                     <table>
                         <thead>
                             <tr>
                                 <th style="width: 20%;">Thời gian</th>
-                                <th>Nội dung chi tiết</th>
+                                <th>Chi tiết vi phạm / Điểm cộng</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1443,7 +1460,6 @@
             }
         }
 
-        // --- GIAO DIỆN CHỐT & SỬA XẾP LOẠI TRONG TAB QUẢN TRỊ ---
         window.loadAdminGradingTable = function() {
             let period = document.getElementById("admin-grading-period").value;
             let editorContainer = document.getElementById("admin-grading-editor-container");
@@ -1576,7 +1592,7 @@
                 if (isSub) {
                     if (violationList.length > 0) {
                         let violationText = violationList.join(', ');
-                        defaultMsg = `GVCN lớp ${STATE.config.className} xin thông báo kết quả ${week} của em ${name}: tổng điểm đạt ${total}đ. Chi tiết vi phạm: ${violationText}. Kính mong PH phối hợp nhắc nhở em. Trân trọng!`;
+                        defaultMsg = `GVCN lớp ${STATE.config.className} xin thông báo kết quả ${week} của em ${name}: tổng điểm đạt ${total}đ. Lỗi vi phạm: ${violationText}. Kính mong PH phối hợp nhắc nhở em. Trân trọng!`;
                     } else {
                         defaultMsg = `GVCN lớp ${STATE.config.className} xin thông báo kết quả ${week} của em ${name}: tổng điểm đạt ${total}đ. Em thực hiện rất tốt nội quy. Kính mong PH tiếp tục động viên em. Trân trọng!`;
                     }
